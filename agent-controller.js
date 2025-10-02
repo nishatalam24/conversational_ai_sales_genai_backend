@@ -5,7 +5,16 @@ const cors = require('cors');
 const { getSalesData, getSalesAnalytics, getProductInsights } = require('./data-model');
 
 const app = express();
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://snazzy-meringue-3159c3.netlify.app',
+    'http://92.5.79.20:5001'
+  ],
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent`;
