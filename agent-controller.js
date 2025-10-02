@@ -5,17 +5,27 @@ const cors = require('cors');
 const { getSalesData, getSalesAnalytics, getProductInsights } = require('./data-model');
 
 const app = express();
-app.use(cors({
+const corsOptions = {
   origin: [
     'http://localhost:3000',
     'https://snazzy-meringue-3159c3.netlify.app',
-    'http://92.5.79.20:5001'
+    'http://92.5.79.20:5001',
+    'https://92.5.79.20:5001'  // Add HTTPS support
   ],
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],  // Add OPTIONS for preflight
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+  credentials: true,
+  maxAge: 86400  // Cache preflight response for 24 hours
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'DENY');
+  res.header('X-XSS-Protection', '1; mode=block');
+  next();
+});
 
 const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent`;
 const apiKey = process.env.GEMINI_API_KEY;
@@ -547,4 +557,28 @@ function generateSmartSuggestions(query, functionResult, parameters) {
 }
 
 app.post('/chat', askAgent);
-app.listen(5001, () => console.log('🚀 Conversational AI Dashboard Server running on http://localhost:5001'));
+const PORT = process.env.PORT || 5001;
+const HOST = '0.0.0.0';  // Listen on all network interfaces
+
+app.listen(PORT, HOST, () => {
+  console.log(`
+🚀 Conversational AI Sales Analytics Server
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✨ Status    : Running
+🌐 URL       : http://${HOST}:${PORT}
+🔒 CORS      : Configured for production
+🎯 Origins   : ${corsOptions.origin.join(', ')}
+⚙️  Process   : ${process.pid}
+📅 Started   : ${new Date().toLocaleString()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`);
+});
+
+// Add graceful shutdown
+// process.on('SIGTERM', () => {
+//   console.log('SIGTERM received. Performing graceful shutdown...');
+//   server.close(() => {
+//     console.log('Server closed. Exiting process.');
+//     process.exit(0);
+//   });
+// });
