@@ -100,7 +100,7 @@ ehthumbs.db
 Thumbs.db
 
 # CSV data files (if you want to keep them private)
-*.csv
+# *.csv
 
 # API keys and sensitive files
 config/keys.js
