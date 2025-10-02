@@ -6,19 +6,12 @@ const { getSalesData, getSalesAnalytics, getProductInsights } = require('./data-
 
 const app = express();
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'https://snazzy-meringue-3159c3.netlify.app',
-    'http://92.5.79.20:5001',
-    'https://92.5.79.20:5001',
-    'http://92.5.79.20:9000'  // Add HTTPS support
-  ],
-  methods: ['GET', 'POST', 'OPTIONS'],  // Add OPTIONS for preflight
+  origin: '*',  // Allow all origins
+  methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-  maxAge: 86400  // Cache preflight response for 24 hours
+  maxAge: 86400
 };
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use((req, res, next) => {
