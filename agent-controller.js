@@ -6,13 +6,15 @@ const { getSalesData, getSalesAnalytics, getProductInsights } = require('./data-
 
 const app = express();
 const corsOptions = {
-  origin: '*',  // Allow all origins
+  origin: (_, callback) => callback(null, true), // allow all origins
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   maxAge: 86400
 };
+
 app.use(cors(corsOptions));
+// app.use(cors("*"));
 app.use(express.json());
 app.use((req, res, next) => {
   res.header('X-Content-Type-Options', 'nosniff');
@@ -561,7 +563,6 @@ app.listen(PORT, HOST, () => {
 ✨ Status    : Running
 🌐 URL       : http://${HOST}:${PORT}
 🔒 CORS      : Configured for production
-🎯 Origins   : ${corsOptions.origin.join(', ')}
 ⚙️  Process   : ${process.pid}
 📅 Started   : ${new Date().toLocaleString()}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
