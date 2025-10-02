@@ -11,7 +11,7 @@ const corsOptions = {
     'https://snazzy-meringue-3159c3.netlify.app',
     'http://92.5.79.20:5001',
     'https://92.5.79.20:5001',
-    'http://92.5.79.20:9000/'  // Add HTTPS support
+    'http://92.5.79.20:9000'  // Add HTTPS support
   ],
   methods: ['GET', 'POST', 'OPTIONS'],  // Add OPTIONS for preflight
   allowedHeaders: ['Content-Type', 'Authorization'],
